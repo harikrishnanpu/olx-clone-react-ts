@@ -1,3 +1,4 @@
+import { Outlet } from "react-router"
 import { CategoriesBar } from "../components/organisms/CategoriesBar"
 import { NavBar } from "../components/organisms/NavBar"
 
@@ -6,6 +7,7 @@ function MainLayout() {
     <div>
         <NavBar />
         <CategoriesBar />
+        <Outlet />
     </div>
   )
 }
