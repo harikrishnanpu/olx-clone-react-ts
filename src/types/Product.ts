@@ -42,4 +42,10 @@ export interface Product {
   areaSqFt?: number;
 
   featured?: boolean;
+
+  seller: {
+    name: string;
+    selledProducts: number;
+    createdAt: string;
+  }
 }

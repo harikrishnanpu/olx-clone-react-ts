@@ -18,7 +18,12 @@ export const sampleProducts: Product[] = [
     transmission: "Manual",
     condition: "Used",
     location: "Mumbai, India",
-    featured: true
+    featured: true,
+    seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
 
   },
   {
@@ -40,7 +45,12 @@ export const sampleProducts: Product[] = [
       screenSize: '6.1"',
     },
     location: "Delhi, India",
-    featured: true
+    featured: true,
+        seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
   {
     id: "3",
@@ -59,6 +69,11 @@ export const sampleProducts: Product[] = [
     transmission: "Manual",
     condition: "Used",
     location: "Pune, India",
+        seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
   {
     id: "4",
@@ -72,6 +87,11 @@ export const sampleProducts: Product[] = [
     createdAt: "2025-11-04T13:25:00Z",
     condition: "Used",
     location: "Bangalore, India",
+        seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
   {
     id: "5",
@@ -92,6 +112,11 @@ export const sampleProducts: Product[] = [
     },
     condition: "Used",
     location: "Chennai, India",
+        seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
   {
     id: "6",
@@ -109,6 +134,11 @@ export const sampleProducts: Product[] = [
     areaSqFt: 1050,
     condition: "Used",
     location: "Kothrud, Pune",
+        seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
   {
     id: "7",
@@ -126,6 +156,11 @@ export const sampleProducts: Product[] = [
     },
     condition: "Used",
     location: "Hyderabad, India",
+        seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
   {
     id: "8",
@@ -140,6 +175,11 @@ export const sampleProducts: Product[] = [
     brand: "Adidas",
     condition: "Used",
     location: "Delhi, India",
+        seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
   {
     id: "9",
@@ -154,6 +194,11 @@ export const sampleProducts: Product[] = [
     brand: "Canon",
     condition: "Used",
     location: "Kochi, India",
+        seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
   {
     id: "10",
@@ -167,5 +212,10 @@ export const sampleProducts: Product[] = [
     createdAt: "2025-10-29T18:20:00Z",
     condition: "Used",
     location: "Ahmedabad, India",
+    seller: {
+      name: "anonymous pp",
+      selledProducts: 10,
+      createdAt: new Date().toISOString()
+    }
   },
 ];
