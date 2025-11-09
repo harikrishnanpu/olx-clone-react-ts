@@ -7,7 +7,7 @@ import LoginButton from '../atoms/LoginButton';
 import { SellButton } from '../atoms/SellButton';
 import { useNavigate } from 'react-router';
 
-export const NavBar = () => {
+export const NavBar = ({openLoginModal}:{openLoginModal: ()=> void}) => {
 
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ export const NavBar = () => {
         <SearchBar />
         <Language />
         <Heart className='cursor-pointer hover:bg-blue-100 rounded-2xl ' />
-        <LoginButton />
+        <LoginButton handleClick={openLoginModal} />
         <SellButton />
     </nav>
   )
