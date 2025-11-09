@@ -1,9 +1,9 @@
 
 
 
-const LoginButton = () => {
+const LoginButton = ({handleClick}:{handleClick: ()=> void}) => {
   return (
-    <div className="ml-4 border-b-2 hover:border-none cursor-pointer">
+    <div onClick={handleClick} className="ml-4 border-b-2 hover:border-none cursor-pointer">
         <p className="font-bold">Login</p>
     </div>
   )
