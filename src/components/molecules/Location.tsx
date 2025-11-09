@@ -14,7 +14,7 @@ export const Location = () => {
     <div onClick={()=> setIsDropDropDrownOpen(prev => !prev)} className="bg-white border-2 relative rounded-sm border-black items-center md:flex w-66 px-2 ml-3 py-2 hidden">
       <IconSearch className="w-6" />
       <DropDown labels={labels} open={isDropDownOpen} />
-          {isDropDownOpen && <div className="bg-white absolute top-12 w-full left-0 right-0 shadow-sm">
+          {isDropDownOpen && <div className="bg-white absolute top-14 w-full left-0 right-0 shadow-sm z-20">
         <div className="flex justify-center p-4 border-gray-200 gap-4 cursor-pointer px-2 hover:bg-blue-100">
         <LocateFixed color="oklch(62.3% 0.214 259.815)" />
         <p className="font-bold text-blue-500 text-sm text-center">Use current location</p>

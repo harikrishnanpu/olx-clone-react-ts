@@ -1,14 +1,6 @@
-export type ProductCategory =
-  | "Vehicles"
-  | "Furniture"
-  | "Electronics"
-  | "Properties"
-  | "Fashion"
-  | "Cameras"
-  | "Others";
+import type { ProductCategory } from "./Product";
 
-export interface Product {
-  id: string;
+export type SellFormData = {
   title: string;
   description: string;
   price: number;
@@ -48,4 +40,4 @@ export interface Product {
     selledProducts: number;
     createdAt: string;
   }
-}
+};

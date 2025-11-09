@@ -1,11 +1,15 @@
+import { useNavigate } from "react-router"
 import type { Product } from "../../types/Product"
 
 
 
 
 export const ProductCard = ({product}: {product: Product}) => {
+
+  const navigate = useNavigate();
+
   return (
-    <div className="border relative border-gray-400 p-2 rounded cursor-pointer">
+    <div onClick={()=> navigate(`/product/${product.id}`)} className="border relative border-gray-400 p-2 rounded cursor-pointer">
         <img src={product.image} alt={product.title} />
         {product.featured && <p className="bg-yellow-400 text-xs w-20 text-center absolute top-42 rounded left-4">Featured</p>}
         <div className="p-2">
