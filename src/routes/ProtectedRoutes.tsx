@@ -5,6 +5,8 @@ import ErrorPage from "../pages/ErrorPage";
 
 
 const SellPageComponent = lazy(()=> import('../pages/SellPage'));
+const CheckoutPageComponent = lazy(()=> import('../pages/CheckoutPage'));
+const MyOrdersPageComponent = lazy(()=> import('../pages/MyOrdersPage'));
 
 
 const ProtectedRoutes  = {
@@ -15,6 +17,14 @@ const ProtectedRoutes  = {
         {
             path: '/sell',
             element: <SellPageComponent />
+        },
+        {
+            path: '/checkout',
+            element: <CheckoutPageComponent />
+        },
+        {
+            path: '/my-orders',
+            element: <MyOrdersPageComponent />
         }
     ]
 

@@ -1,4 +1,3 @@
-// src/components/atoms/icons.tsx
 
 export function IconSearch({ className = "w-5 h-5" }: { className?: string }) {
   return (

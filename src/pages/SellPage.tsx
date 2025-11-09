@@ -4,6 +4,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import { SellPageCategorySection } from "../components/organisms/sellPage/SellPageCategorySection";
 import { SellPageProductDetailsSection } from "../components/organisms/sellPage/SellPageProductDetails";
 import { SellPageSummarySection } from "../components/organisms/sellPage/SellPageSummarySection";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { submitProductToFirestore } from "../store/slices/productsSlice";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
 
 
@@ -11,6 +15,16 @@ import { SellPageSummarySection } from "../components/organisms/sellPage/SellPag
 function SellPage() {
 
     const [currSection, setCurrSection] = useState(0);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+    const { submitting } = useAppSelector((state) => state.products);
+
+    useEffect(() => {
+      if (!isAuthenticated) {
+        navigate('/');
+      }
+    }, [isAuthenticated, navigate]);
 
 const methods = useForm<SellFormData>({
     defaultValues: {
@@ -20,7 +34,7 @@ const methods = useForm<SellFormData>({
   category: "Cameras",
   sold: false,
   createdAt: "",
-
+  price: 0,
 
   location: "",
   condition: "New",
@@ -30,7 +44,6 @@ const methods = useForm<SellFormData>({
   fuelType: "Petrol" ,
   transmission: "Manual",
 
-  // Mobile or Laptop specs
   specs: {
     ram: "",
     storage: "",
@@ -38,18 +51,59 @@ const methods = useForm<SellFormData>({
     screenSize: "",
   },
 
-  // Property details
   bedrooms: 0,
   bathrooms: 0,
   areaSqFt: 0,
+
+  seller: {
+    name: "",
+    selledProducts: 0,
+    createdAt: "",
+  }
 
     },
     mode: "onSubmit",
   });
 
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!user) {
+      return;
+    }
 
+    const formData = methods.getValues();
+    
+    const sellerData = {
+      name: user.displayName || user.email?.split('@')[0] || 'User',
+      selledProducts: 0,
+      createdAt: new Date().toISOString(),
+    };
+
+    const completeFormData: SellFormData = {
+      ...formData,
+      createdAt: new Date().toISOString(),
+      seller: sellerData,
+    };
+
+    try {
+      await dispatch(
+        submitProductToFirestore({
+          formData: completeFormData,
+          userId: user.uid,
+          userName: sellerData.name,
+          userEmail: user.email || '',
+        })
+      ).unwrap();
+      
+      methods.reset();
+      navigate('/');
+    } catch (error) {
+      console.error('Error submitting product:', error);
+    }
+  }
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   return (
@@ -57,7 +111,12 @@ const methods = useForm<SellFormData>({
     <section className="px-4 py-5 items-center flex w-full mt-10">
         {currSection === 0 && <SellPageCategorySection setCurrSection={setCurrSection} />}
         {currSection === 1 && <SellPageProductDetailsSection setCurrSection={setCurrSection} />}
-        {currSection === 2 && <SellPageSummarySection handleSubmit={handleSubmit} />}
+        {currSection === 2 && (
+          <SellPageSummarySection 
+            handleSubmit={handleSubmit} 
+            submitting={submitting}
+          />
+        )}
     </section>
     </FormProvider>
   )
