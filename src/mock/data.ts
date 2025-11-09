@@ -1,4 +1,4 @@
-import type { Product } from "../types/Product";
+import type { Product, ProductCategory } from "../types/Product";
 
 export const sampleProducts: Product[] = [
   {
@@ -219,3 +219,14 @@ export const sampleProducts: Product[] = [
     }
   },
 ];
+
+
+export const sampleCategories: ProductCategory[] = [
+  "Vehicles"
+  ,"Furniture"
+  ,"Electronics"
+  ,"Properties"
+  , "Fashion"
+  , "Cameras"
+  , "Others"
+]
