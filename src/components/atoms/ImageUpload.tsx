@@ -1,4 +1,3 @@
-// src/components/atoms/ImageUpload.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { Upload } from "lucide-react";
 
@@ -65,9 +64,8 @@ export const ImageUpload: React.FC<Props> = ({
       onUploadComplete?.(secureUrl);
       return secureUrl;
     } catch (err) {
-        if(err instanceof Error){
-            alert(err)
-        }
+      const errorMessage = err instanceof Error ? err.message : 'Upload failed';
+      alert(errorMessage);
       onUploadComplete?.(null);
       return null;
     } finally {

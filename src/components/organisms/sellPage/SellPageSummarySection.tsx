@@ -10,7 +10,13 @@ import { Divider } from "../../atoms/Divider";
 
 
 
-export const SellPageSummarySection = ({handleSubmit}:{handleSubmit: ()=> void}) => {
+export const SellPageSummarySection = ({
+  handleSubmit,
+  submitting = false,
+}: {
+  handleSubmit: () => void;
+  submitting?: boolean;
+}) => {
 
     const { setValue, trigger, formState:{errors}, register, getValues } = useFormContext<SellFormData>();
 
@@ -39,7 +45,11 @@ export const SellPageSummarySection = ({handleSubmit}:{handleSubmit: ()=> void})
         <p className="text-sm">Description: <span className="font-bold text-blue-700 ">{getValues('description')}</span></p>
         <p className="text-sm">Price: <span className="font-bold text-blue-700 ">{getValues('price')}</span></p>
         <p className="text-sm">Location: <span className="font-bold text-blue-700 ">{getValues('location')}</span></p>
-        <Button handleClick={handleNextClick} btnText="Submit" />
+        <Button 
+          handleClick={handleNextClick} 
+          btnText={submitting ? "Submitting..." : "Submit"}
+        />
+        {submitting && <p className="text-blue-600 text-sm mt-2">Please wait...</p>}
     </div>
 
   )

@@ -4,6 +4,7 @@ import ErrorPage from "../pages/ErrorPage";
 
 const HomePageComponent = lazy(() => import('../pages/HomePage'));
 const ProductPageComponent = lazy(()=> import('../pages/ProductPage'));
+const CategoryPageComponent = lazy(() => import('../pages/CategoryPage'));
 
 const MainRoutes = {
     path: '/',
@@ -17,6 +18,10 @@ const MainRoutes = {
         {
             path: '/product/:id',
             element: <ProductPageComponent />
+        },
+        {
+            path: '/:categoryname',
+            element: <CategoryPageComponent />
         }
     ]
 

@@ -3,7 +3,7 @@ import googleIcon from '../../assets/google.png';
 
 interface GoogleAuthButtonProps {
   title: string;
-  handler: () => void;
+  handler: () => void | Promise<void>;
   disabled: boolean;
 }
 
@@ -11,13 +11,9 @@ const GoogleAuthButton = ({ title, handler, disabled }: GoogleAuthButtonProps) =
 
     const handleButtonClick = async () => {
         try{
-            const user = await handler();
-            console.log(user);
-            toast.success("Login successful!");
+            await handler();
         }catch(err){
-            if(err instanceof Error){
-                toast.error(err.message || "Login failed ! Please try again.");
-            }
+            console.error(err);
         }
     }
 

@@ -1,19 +1,59 @@
-import { useParams } from "react-router";
-import { sampleProducts } from "../mock/data";
+import { useParams, useNavigate } from "react-router";
+import { useEffect } from "react";
 import { ChevronRight, CircleUserRound, Heart, Share2 } from "lucide-react";
 import { Button } from "../components/atoms/Button";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { fetchProductByIdFromFirestore } from "../store/slices/productsSlice";
+import { addToCart } from "../store/slices/cartSlice";
+import toast from "react-hot-toast";
 
 function ProductPage() {
   const { id } = useParams();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { currentProduct, loading } = useAppSelector((state) => state.products);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const product = sampleProducts.find((prod) => prod.id == id);
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchProductByIdFromFirestore(id));
+    }
+  }, [id, dispatch]);
+
+  const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to cart");
+      return;
+    }
+    if (currentProduct) {
+      dispatch(addToCart(currentProduct));
+      toast.success("Added to cart!");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading product...</p>
+      </div>
+    );
+  }
+
+  if (!currentProduct) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-xl font-bold mb-4">Product not found</p>
+          <Button btnText="Go Home" handleClick={() => navigate('/')} />
+        </div>
+      </div>
+    );
+  }
+
+  const product = currentProduct;
 
   return (
     <div className="py-2 px-4 sm:px-20 md:flex justify-between gap-2 mt-5 items-center">
-      
-
-      {/* page left section */}
-
       <div className="sm:w-2/4">
 
       <img
@@ -65,11 +105,8 @@ function ProductPage() {
 
 
         </div>
+      </div>
 
-
-        </div>
-
-      {/* page right section */}
       <div className="sm:w-2/4 mb-auto">
         <div className="border border-gray-300 rounded w-full mt-2">
           <div className="w-full px-4 py-4">
@@ -91,8 +128,6 @@ function ProductPage() {
         </div>
 
         <div className="border px-4 py-4 border-gray-300 rounded w-full mt-2 items-center">
-          
-          {/* seller details */}
           <div className="flex gap-4 items-center cursor-pointer">
           <CircleUserRound size={30} className="text-gray-600" />
           <div className="">
@@ -102,22 +137,19 @@ function ProductPage() {
           <ChevronRight className="ml-auto " />
           </div>
 
-          {/* selled out count */}
-
           <div className="border-l mt-5 mx-auto w-30 text-center border-r border-gray-400">
             <p className="text-sm font-bold text-blue-800">{product?.seller.selledProducts}</p>
             <p className="text-sm text-gray-600">Items Listed</p>
           </div>
 
-          {/* chat wqit seller btn */}
           <div className="w-full">
-          <Button btnText="Chat with seller" />
+          <Button handleClick={()=>{}} btnText="Chat with seller" />
           </div>
         </div>
 
         <div className="border px-4 py-4 border-gray-300 rounded w-full mt-2 items-center">
           
-          <Button color="yellow" btnText="Add to Cart" />
+          <Button color="yellow" btnText="Add to Cart" handleClick={handleAddToCart} />
         </div>
 
       </div>
