@@ -1,11 +1,11 @@
 import { FormProvider, useForm } from "react-hook-form"
 import { UserEmailSignupForm } from "../components/organisms/EmailSignupForm";
 import type { SignUpFormData } from "../types/SignupFormData";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch } from "../hooks/hooks";
 import { signUpWithEmail } from "../store/slices/authSlice";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
-import { useAppSelector } from "../store/hooks";
+import { useAppSelector } from "../hooks/hooks";
 
 
 

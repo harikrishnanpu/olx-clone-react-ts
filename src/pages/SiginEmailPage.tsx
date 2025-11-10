@@ -1,11 +1,12 @@
 import { FormProvider, useForm } from "react-hook-form"
 import type { SignInFormData } from "../types/SigninFormData"
 import { UserEmailForm } from "../components/organisms/EmailSiginForm";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch } from "../hooks/hooks";
 import { signInWithEmail } from "../store/slices/authSlice";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
-import { useAppSelector } from "../store/hooks";
+import { useAppSelector } from "../hooks/hooks";
+import toast from "react-hot-toast";
 
 
 
@@ -25,18 +26,11 @@ function SiginEmailPage() {
     });
 
   const handleSignIn = async (data: SignInFormData) => {
-    try {
-      await dispatch(signInWithEmail({ email: data.email, password: data.password }));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    if (isAuthenticated) {
+    const result = await dispatch(signInWithEmail({ email: data.email, password: data.password }));
+    if (signInWithEmail.fulfilled.match(result)) {
       navigate('/');
     }
-  }, [isAuthenticated, navigate]);
+  };
     
 
   return (

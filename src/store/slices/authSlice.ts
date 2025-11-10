@@ -16,101 +16,114 @@ const initialState: AuthState = {
   loading: false,
   error: null,
   isAuthenticated: false,
-  initialLoading: true,
 };
 
 
-export const signInWithGoogle = createAsyncThunk(
-  'auth/signInWithGoogle',
-  async (_, { rejectWithValue }) => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      return result.user;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Google sign-in failed';
-      toast.error(errorMessage);
-      return rejectWithValue(errorMessage);
+  export const signInWithGoogle = createAsyncThunk(
+    'auth/signInWithGoogle',
+    async (_, { rejectWithValue }) => {
+        try {
+          const result = await signInWithPopup(auth, googleProvider);
+          return result.user;
+        } catch (err) {
+          if(err instanceof Error){
+            toast.error(err.message);
+            return rejectWithValue(err.message);
+          }
+          return rejectWithValue('An unknown error occurred');
+        }
     }
-  }
-);
+    );
 
-export const signInWithEmail = createAsyncThunk(
-  'auth/signInWithEmail', async (
-{ email, password }: { email: string; password: string },
-    { rejectWithValue }
-  ) => {
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      toast.success('Sign in successful!');
-      return result.user;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign in failed';
-      toast.error(errorMessage);
-      return rejectWithValue(errorMessage);
+  export const signInWithEmail = createAsyncThunk(
+    'auth/signInWithEmail', async (
+      { email, password }: { email: string; password: string },
+        { rejectWithValue }
+        ) => {
+        try {
+          const result = await signInWithEmailAndPassword(auth, email, password);
+          toast.success('Sign in successful!');
+          return result.user;
+        } catch (err) {
+          if(err instanceof Error){
+            toast.error(err.message);
+            return rejectWithValue(err.message);
+          }
+          return rejectWithValue('An unknown error occurred');
+      }
     }
-  }
-);
+    );
 
 
-export const signUpWithEmail = createAsyncThunk(
-  'auth/signUpWithEmail',
-  async (
+  export const signUpWithEmail = createAsyncThunk(
+    'auth/signUpWithEmail',
+    async (
     { email, password }: { email: string; password: string },
     { rejectWithValue }
-  ) => {
-    try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
-      toast.success('Account created successfully!');
-      return result.user;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign up failed';
-      toast.error(errorMessage);
-      return rejectWithValue(errorMessage);
+    ) => {
+        try {
+          const result = await createUserWithEmailAndPassword(auth, email, password);
+          toast.success('Account created successfully!');
+          return result.user;
+        } catch (err) {
+          if(err instanceof Error){
+            toast.error(err.message);
+            return rejectWithValue(err.message);
+          }
+          return rejectWithValue('An unknown error occurred');
+        }
     }
-  }
-);
+    );
 
-export const signOutUser = createAsyncThunk(
-  'auth/signOut',
-  async (_, { rejectWithValue }) => {
-    try {
-      await signOut(auth);
-      toast.success('Signed out successfully');
-      return null;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign out failed';
-      toast.error(errorMessage);
-      return rejectWithValue(errorMessage);
+  export const signOutUser = createAsyncThunk(
+    'auth/signOut',
+    async (_, { rejectWithValue }) => {
+      try {
+        await signOut(auth);
+        toast.success('Signed out successfully');
+        return null;
+      } catch (err) {
+        if(err instanceof Error){
+          toast.error(err.message);
+          return rejectWithValue(err.message);
+        }
+        return rejectWithValue('An unknown error occurred');
+      }
     }
-  }
-);
+    );
 
-const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {
+    const authSlice = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {
+
     setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload ?? null;
       state.isAuthenticated = !!action.payload;
       state.error = null;
-      state.initialLoading = false;
+      state.loading = false;
     },
+
     clearError: (state) => {
       state.error = null;
     },
-  },
-  extraReducers: (builder) => {
+
+    },
+
+    extraReducers: (builder) => {
     builder
       .addCase(signInWithGoogle.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+
       .addCase(signInWithGoogle.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload ?? null;
         state.isAuthenticated = true;
         state.error = null;
       })
+
       .addCase(signInWithGoogle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
@@ -128,6 +141,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.error = null;
       })
+
       .addCase(signInWithEmail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
@@ -165,9 +179,11 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
-  },
-});
+    },
 
-export const { setUser, clearError } = authSlice.actions;
-export default authSlice.reducer;
+
+    });
+
+    export const { setUser, clearError } = authSlice.actions;
+    export default authSlice.reducer;
 

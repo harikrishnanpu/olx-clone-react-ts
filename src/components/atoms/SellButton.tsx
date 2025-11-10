@@ -1,11 +1,9 @@
-import  { useNavigate } from "react-router";
 
-export const SellButton = () => {
+export const SellButton = ({handleClick}: {handleClick: ()=> void}) => {
 
-  const navigate = useNavigate();
 
   return (
-    <div onClick={()=> navigate('/sell')} className="sellMenu ml-10">
+    <div onClick={handleClick} className="sellMenu ml-10">
       <svg
         width={104}
         height={48}
