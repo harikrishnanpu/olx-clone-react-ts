@@ -1,12 +1,13 @@
-import { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { createOrderInFirestore } from '../store/slices/ordersSlice';
-import { clearCart } from '../store/slices/cartSlice';
+import { clearCart, removeFromCart } from '../store/slices/cartSlice';
+import { clearCartFromFirestore, removeItemFromCartFirestore } from '../services/firestore';
 import { Button } from '../components/atoms/Button';
 import { InputBox } from '../components/atoms/InputBox';
 import { ChevronLeft } from 'lucide-react';
+import toast from 'react-hot-toast';
 import type { ShippingAddress } from '../types/OrderTypes';
 
 interface CheckoutFormData extends ShippingAddress {}
@@ -54,25 +55,44 @@ function CheckoutPage() {
 
   const onSubmit = async (data: CheckoutFormData) => {
     try {
-      await dispatch(
-        createOrderInFirestore({
-          userId: user.uid,
-          items: items.map((item) => ({
-            productId: item.product.id,
-            product: item.product,
-            quantity: item.quantity,
-          })),
-          shippingAddress: data,
-          totalAmount,
-        })
-      ).unwrap();
 
-      dispatch(clearCart());
-      navigate('/my-orders');
-    } catch (error) {
-      console.error('Error placing order:', error);
+    await dispatch(
+      createOrderInFirestore({
+        userId: user.uid,
+
+        items: items.map((item) => ({
+          productId: item.product.id,
+          product: item.product,
+        })),
+
+        shippingAddress: data,
+        totalAmount: items.reduce((total, item) => total + item.product.price, 0),
+      })
+    ).unwrap();
+
+    dispatch(clearCart());
+    await clearCartFromFirestore(user.uid);
+    navigate('/my-orders');
+
+    } catch (err) {
+      if(err instanceof Error){
+        toast.error(err.message)
+      }
     }
   };
+
+
+  const removeItem = async (id: string) =>{
+    try{
+      dispatch(removeFromCart({productId: id}))
+      await removeItemFromCartFirestore(id,user.uid);
+      toast.success('item remoed successfully')
+    }catch(err){
+      if(err instanceof Error){
+        toast.error(err.message)
+      }
+    }
+  }
 
   return (
     <div className="px-4 py-8 max-w-4xl mx-auto">
@@ -220,10 +240,10 @@ function CheckoutPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className={`font-bold border-2 cursor-pointer rounded-sm px-3 py-3 w-full ${
+                className={`font-bold border-2 rounded-sm px-3 py-3 w-full ${
                   submitting
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'text-blue-800 hover:bg-blue-50 border-blue-800'
+                    ? 'bg-gray-400 cursor-not-allowed text-gray-600 border-gray-400'
+                    : 'cursor-pointer text-blue-800 hover:bg-blue-50 border-blue-800'
                 }`}
               >
                 {submitting ? 'Placing Order...' : 'Place Order'}
@@ -237,12 +257,17 @@ function CheckoutPage() {
           <div className="border border-gray-300 rounded p-4">
             <div className="space-y-3 mb-4">
               {items.map((item) => (
-                <div key={item.product.id} className="flex justify-between items-center border-b pb-2">
+                <div key={item.product.id} className={`flex justify-between items-center border p-2 rounded border-gray-300 ${item.product.sold ? 'opacity-50' : ''}`}>
                   <div className="flex-1">
-                    <p className="font-semibold text-sm">{item.product.title}</p>
-                    <p className="text-xs text-gray-600">Qty: {item.quantity}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-sm">{item.product.title}</p>
+                      {item.product.sold && (
+                        <span className="bg-red-600 text-white text-xs px-2 py-1 rounded">SOLD OUT</span>
+                      )}
+                    </div>
                   </div>
-                  <p className="font-bold">₹{item.product.price * item.quantity}</p>
+                  <p className="font-bold mx-2">₹{item.product.price}</p>
+                  <p onClick={()=> removeItem(item.product.id)}  className='text-red-500 text-xs cursor-pointer'>remove</p>
                 </div>
               ))}
             </div>

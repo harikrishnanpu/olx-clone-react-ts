@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { fetchProductsByCategoryFromFirestore } from "../store/slices/productsSlice";
 import { ProductsList } from "../components/organisms/ProductsList";
 import type { ProductCategory } from "../types/Product";

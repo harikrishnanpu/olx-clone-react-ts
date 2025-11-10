@@ -48,4 +48,5 @@ export interface Product {
     selledProducts: number;
     createdAt: string;
   }
+  stock: number;
 }

@@ -3,7 +3,6 @@ import type { Product } from './Product';
 export interface OrderItem {
   productId: string;
   product: Product;
-  quantity: number;
 }
 
 export interface ShippingAddress {

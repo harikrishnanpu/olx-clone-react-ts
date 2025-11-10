@@ -4,10 +4,11 @@ import { FormProvider, useForm } from "react-hook-form";
 import { SellPageCategorySection } from "../components/organisms/sellPage/SellPageCategorySection";
 import { SellPageProductDetailsSection } from "../components/organisms/sellPage/SellPageProductDetails";
 import { SellPageSummarySection } from "../components/organisms/sellPage/SellPageSummarySection";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { submitProductToFirestore } from "../store/slices/productsSlice";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 
 
@@ -34,8 +35,6 @@ const methods = useForm<SellFormData>({
   category: "Cameras",
   sold: false,
   createdAt: "",
-  price: 0,
-
   location: "",
   condition: "New",
   brand: "",
@@ -74,7 +73,7 @@ const methods = useForm<SellFormData>({
     const formData = methods.getValues();
     
     const sellerData = {
-      name: user.displayName || user.email?.split('@')[0] || 'User',
+      name: user.displayName || 'user123',
       selledProducts: 0,
       createdAt: new Date().toISOString(),
     };
@@ -86,20 +85,24 @@ const methods = useForm<SellFormData>({
     };
 
     try {
+
+
       await dispatch(
         submitProductToFirestore({
           formData: completeFormData,
           userId: user.uid,
           userName: sellerData.name,
-          userEmail: user.email || '',
         })
       ).unwrap();
       
       methods.reset();
       navigate('/');
-    } catch (error) {
-      console.error('Error submitting product:', error);
+    } catch (err) {
+      if(err instanceof Error){
+        toast.error(err.message)
+      }
     }
+
   }
 
   if (!isAuthenticated) {

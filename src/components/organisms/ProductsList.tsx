@@ -2,52 +2,39 @@ import { useEffect } from "react";
 import type { Product } from "../../types/Product"
 import { Button } from "../atoms/Button"
 import { ProductCard } from "../atoms/ProductCard"
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { fetchProductsFromFirestore } from "../../store/slices/productsSlice";
+import { Loading } from "./Loading";
 
-interface ProductsListProps {
-  products?: Product[];
-  searchQuery?: string;
-}
 
-export const ProductsList = ({ products: propProducts, searchQuery }: ProductsListProps) => {
+
+export const ProductsList = ({ searchQuery }: {  products?: Product[],  searchQuery?: string | null}) => {
+  
   const dispatch = useAppDispatch();
-  const { products: storeProducts, loading } = useAppSelector((state) => state.products);
-
-  const products = propProducts || storeProducts;
+  const { products, loading } = useAppSelector((state) => state.products);
 
   useEffect(() => {
-    if (!propProducts) {
       dispatch(fetchProductsFromFirestore(20));
-    }
-  }, [dispatch, propProducts]);
+  }, [dispatch]);
 
   const handleLoadMore = () => {
-    if (!propProducts) {
       dispatch(fetchProductsFromFirestore());
-    }
   };
 
-  const filteredProducts = searchQuery
-    ? products.filter((product) =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : products;
+  const filteredProducts = searchQuery ? products.filter((product) => 
+    product.title.toLowerCase().includes(searchQuery.toLowerCase()) || product.description.toLowerCase().includes(searchQuery.toLowerCase()) ) : products;
 
-  if (loading && filteredProducts.length === 0 && !propProducts) {
+  if (loading && filteredProducts.length === 0 ) {
     return (
-      <div className="mt-4 w-full items-center flex flex-col">
-        <p className="text-gray-600">Loading products...</p>
-      </div>
+      <Loading count={15} />
     );
   }
 
   if (filteredProducts.length === 0) {
     return (
-      <div className="mt-4 w-full items-center flex flex-col">
+      <div className="mt-30 w-full items-center flex flex-col justify-center">
         <p className="text-gray-600">
-          {searchQuery ? `No products found for "${searchQuery}"` : "No products available"}
+          {searchQuery ? `No products foud for ${searchQuery}` : "No products available"}
         </p>
       </div>
     );
@@ -62,14 +49,13 @@ export const ProductsList = ({ products: propProducts, searchQuery }: ProductsLi
           ))
         }
     </div>
-    {!propProducts && (
       <div>
         <Button 
-          btnText={loading ? "Loading..." : "Load more"} 
+          btnText="Load more" 
           handleClick={handleLoadMore}
+          loading={loading}
         />
       </div>
-    )}
     </div>
   )
 }

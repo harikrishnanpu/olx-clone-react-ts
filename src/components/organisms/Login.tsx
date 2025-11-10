@@ -3,10 +3,10 @@ import GoogleAuthButton from "../atoms/GoogleButton"
 import loginEntryPointPost from '../../assets/loginEntryPointPost.webp'
 import { Button } from "../atoms/Button"
 import { useNavigate } from "react-router"
-import { useAppDispatch } from "../../store/hooks"
+import { useAppDispatch } from "../../hooks/hooks"
 import { signInWithGoogle } from "../../store/slices/authSlice"
 import { useEffect } from "react"
-import { useAppSelector } from "../../store/hooks"
+import { useAppSelector } from "../../hooks/hooks"
 
 
 

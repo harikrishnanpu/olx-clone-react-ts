@@ -2,9 +2,9 @@ import { useParams, useNavigate } from "react-router";
 import { useEffect } from "react";
 import { ChevronRight, CircleUserRound, Heart, Share2 } from "lucide-react";
 import { Button } from "../components/atoms/Button";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { fetchProductByIdFromFirestore } from "../store/slices/productsSlice";
-import { addToCart } from "../store/slices/cartSlice";
+import { addToCart, saveCartAsync } from "../store/slices/cartSlice";
 import toast from "react-hot-toast";
 
 function ProductPage() {
@@ -12,7 +12,8 @@ function ProductPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { currentProduct, loading } = useAppSelector((state) => state.products);
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { items, loading: cartLoading } = useAppSelector((state) => state.cart);
 
   useEffect(() => {
     if (id) {
@@ -20,14 +21,23 @@ function ProductPage() {
     }
   }, [id, dispatch]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!isAuthenticated) {
       toast.error("Please login to add items to cart");
       return;
     }
-    if (currentProduct) {
-      dispatch(addToCart(currentProduct));
-      toast.success("Added to cart!");
+    if (currentProduct?.sold) {
+      toast.error("This product is sold out and cannot be added to cart");
+      return;
+    }
+    if (currentProduct && user) {
+      const existingItem = items.find(item => item.product.id === currentProduct.id);
+      if (!existingItem) {
+        dispatch(addToCart({ product: currentProduct, userId: user.uid }));
+        const updatedItems = [...items, { product: currentProduct }];
+        await dispatch(saveCartAsync({ userId: user.uid, items: updatedItems }));
+        toast.success("Added to cart!");
+      }
     }
   };
 
@@ -148,8 +158,16 @@ function ProductPage() {
         </div>
 
         <div className="border px-4 py-4 border-gray-300 rounded w-full mt-2 items-center">
-          
-          <Button color="yellow" btnText="Add to Cart" handleClick={handleAddToCart} />
+          {product.sold ? (
+            <div className="w-full">
+              <div className="bg-red-600 text-white text-center py-3 rounded font-bold">
+                SOLD OUT
+              </div>
+              <p className="text-center text-gray-600 text-sm mt-2">This product is no longer available</p>
+            </div>
+          ) : (
+            <Button color="yellow" btnText="Add to Cart" handleClick={handleAddToCart} loading={cartLoading} />
+          )}
         </div>
 
       </div>

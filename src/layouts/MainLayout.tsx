@@ -16,7 +16,7 @@ function MainLayout() {
 
 
   return (
-    <div>
+    <div className="">
         <NavBar openLoginModal={openLoginModal}  />
         <CategoriesBar />
         <Outlet />

@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 import type {
   OrderItem,
   ShippingAddress,
-  Order,
   OrdersState,
 } from '../../types/OrderTypes';
 
@@ -56,6 +55,7 @@ export const fetchUserOrdersFromFirestore = createAsyncThunk(
     try {
       const orders = await fetchUserOrders(userId);
       return orders;
+      
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to fetch orders';
