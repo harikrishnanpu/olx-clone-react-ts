@@ -22,12 +22,14 @@ function CategoryPage() {
 
   useEffect(() => {
     if (categoryname && categoryname !== "product") {
+
       const normalizedCategory = categoryname.toLowerCase();
       const productCategory = categoryMap[normalizedCategory];
       
       if (productCategory) {
         dispatch(fetchProductsByCategoryFromFirestore({ category: productCategory }));
       }
+      
     }
   }, [categoryname, dispatch]);
 

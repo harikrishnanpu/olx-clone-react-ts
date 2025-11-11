@@ -7,3 +7,4 @@ export const InputBox = ({placeholder, type="text", ...props}: {placeholder: str
     </div>
   )
 }
+ 

@@ -62,14 +62,16 @@ const CARTS_COLLECTION = "carts";
       };
 
   export const fetchProducts = async (
-        limitCount?: number
+        limitCount?: number,
+        order?: 'asc' | 'desc' 
       ): Promise<Product[]> => {
         try {
 
 
+
           let q = query(
             collection(db, PRODUCTS_COLLECTION),
-            orderBy("createdAt", "desc")
+            order == 'asc' ? orderBy("createdAt", "asc") : orderBy("createdAt", "desc")
           );
 
           if (limitCount) {
