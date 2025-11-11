@@ -50,10 +50,10 @@ const initialState: ProductsState = {
 
   export const fetchProductsFromFirestore = createAsyncThunk(
     'products/fetchProducts',
-    async (limitCount: number | undefined, { rejectWithValue }) => {
+    async ({limitCount, order}:{limitCount: number, order: 'asc' | 'desc'}, { rejectWithValue }) => {
       try {
 
-        const products = await fetchProducts(limitCount);
+        const products = await fetchProducts(limitCount,order);
         return products;
       } catch (err) {
 
@@ -143,7 +143,6 @@ const initialState: ProductsState = {
           });
 
         builder
-
           .addCase(fetchProductsFromFirestore.pending, (state) => {
             state.loading = true;
             state.error = null;

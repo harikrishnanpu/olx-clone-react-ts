@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Product } from "../../types/Product"
 import { Button } from "../atoms/Button"
 import { ProductCard } from "../atoms/ProductCard"
@@ -12,14 +12,20 @@ export const ProductsList = ({ searchQuery }: {  products?: Product[],  searchQu
   
   const dispatch = useAppDispatch();
   const { products, loading } = useAppSelector((state) => state.products);
+  const [order, setOrder] = useState('asc');
 
   useEffect(() => {
-      dispatch(fetchProductsFromFirestore(20));
+      dispatch(fetchProductsFromFirestore({limitCount: 20, order: 'asc'}));
   }, [dispatch]);
 
   const handleLoadMore = () => {
-      dispatch(fetchProductsFromFirestore());
+      dispatch(fetchProductsFromFirestore({limitCount: 20, order: 'asc'}));
   };
+
+  const handleChangeOrder = () => {
+    setOrder(prev => prev == "asc" ? 'desc' : 'asc');
+    dispatch(fetchProductsFromFirestore({limitCount: 20, order: order}))
+  }
 
   const filteredProducts = searchQuery ? products.filter((product) => 
     product.title.toLowerCase().includes(searchQuery.toLowerCase()) || product.description.toLowerCase().includes(searchQuery.toLowerCase()) ) : products;
@@ -54,6 +60,11 @@ export const ProductsList = ({ searchQuery }: {  products?: Product[],  searchQu
           btnText="Load more" 
           handleClick={handleLoadMore}
           loading={loading}
+        />
+        <Button 
+        btnText="Change Order"
+        handleClick={handleChangeOrder}
+        loading={false}
         />
       </div>
     </div>
