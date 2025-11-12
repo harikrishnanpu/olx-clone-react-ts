@@ -4,9 +4,7 @@ import { UserEmailForm } from "../components/organisms/EmailSiginForm";
 import { useAppDispatch } from "../hooks/hooks";
 import { signInWithEmail } from "../store/slices/authSlice";
 import { useNavigate } from "react-router";
-import { useEffect } from "react";
 import { useAppSelector } from "../hooks/hooks";
-import toast from "react-hot-toast";
 
 
 
@@ -15,7 +13,7 @@ function SiginEmailPage() {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { isAuthenticated, loading } = useAppSelector((state) => state.auth);
+    const { loading } = useAppSelector((state) => state.auth);
 
     const methods = useForm<SignInFormData>({
         defaultValues:{

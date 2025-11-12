@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { ProductCategory } from '../../types/Product';
+import type { Product, ProductCategory } from '../../types/Product';
 import type { SellFormData } from '../../types/SellFormData';
 import type { ProductsState } from '../../types/ProductsTypes';
 import {
@@ -151,7 +151,7 @@ const initialState: ProductsState = {
 
           .addCase(fetchProductsFromFirestore.fulfilled, (state, action) => {
             state.loading = false;
-            state.products = action.payload;
+            state.products = action.payload || [];
             state.error = null;
           })
 
@@ -168,7 +168,7 @@ const initialState: ProductsState = {
           })
           .addCase(fetchProductsByCategoryFromFirestore.fulfilled, (state, action) => {
             state.loading = false;
-            state.products = action.payload;
+            state.products = action.payload || [];
             state.error = null;
           })
           .addCase(fetchProductsByCategoryFromFirestore.rejected, (state, action) => {
@@ -183,7 +183,7 @@ const initialState: ProductsState = {
           })
           .addCase(fetchProductByIdFromFirestore.fulfilled, (state, action) => {
             state.loading = false;
-            state.currentProduct = action.payload;
+            state.currentProduct = action.payload as Product;
             state.error = null;
           })
           .addCase(fetchProductByIdFromFirestore.rejected, (state, action) => {
