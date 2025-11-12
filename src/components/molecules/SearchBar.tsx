@@ -1,4 +1,4 @@
-import { useState, FormEvent, useEffect } from "react";
+import { useState, type FormEvent, useEffect, type SetStateAction } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { Search } from "lucide-react"
 import { InputBox } from "../atoms/InputBox"
@@ -27,9 +27,9 @@ export const SearchBar = () => {
   return (
     <form onSubmit={handleSearch} className="bg-white w-3/6 mx-2 border-2 border-black rounded-sm md:flex items-center hidden">
       <InputBox 
-        placeholder="Find Cars, Mobile Phones and More..." 
+        placeholder="Find Cars, Mobile Phones and More..."
+        onChange={(e: { target: { value: SetStateAction<string>; }; }) => setSearchQuery(e.target.value)}
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
       />
       <button type="submit" className="bg-black py-3 w-12 cursor-pointer items-center flex">
         <Search className="mx-auto" color="#fff" />

@@ -48,6 +48,7 @@ const cartSlice = createSlice({
       if (!existingItem) {
         state.items.push({
           product: action.payload.product,
+          productId: action.payload.product.id,
         });
         state.totalAmount = calculateTotal(state.items);
       }

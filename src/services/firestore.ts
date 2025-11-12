@@ -55,9 +55,7 @@ const CARTS_COLLECTION = "carts";
           
           return docRef.id;
         } catch (err) {
-             if(err instanceof Error){
-            throw err;
-          }
+ throw new Error(String(err));
         }
       };
 
@@ -92,9 +90,7 @@ const CARTS_COLLECTION = "carts";
 
           return products;
         } catch (err) {
-           if(err instanceof Error){
-            throw err;
-          }
+ throw new Error(String(err));
         }
       };
 
@@ -131,15 +127,13 @@ const CARTS_COLLECTION = "carts";
 
           return products;
         } catch (err) {
-         if(err instanceof Error){
-            throw err;
-          }
+            throw new Error(String(err));
         }
       };
 
       export const fetchProductById = async (
         productId: string
-      ): Promise<Product | Error> => {
+      ): Promise<Product | null> => {
         try {
 
           const productRef = doc(db, PRODUCTS_COLLECTION, productId);
@@ -156,11 +150,10 @@ const CARTS_COLLECTION = "carts";
                 new Date().toISOString(),
             } as Product;
           }
+
           return null;
         } catch (err) {
-            if(err instanceof Error){
-            throw err;
-          }
+ throw new Error(String(err));
         }
       };
 
@@ -326,8 +319,6 @@ export const createOrder = async (orderData: {
 
           return orders;
         } catch (err) {
-                if(err instanceof Error){
-            throw err;
-          }
+ throw new Error(String(err));
         }
       };

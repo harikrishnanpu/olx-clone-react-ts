@@ -95,8 +95,7 @@ function MyOrdersPage() {
                         className="w-full h-32 object-cover rounded mb-2"
                       />
                       <p className="font-semibold text-sm">{item.product.title}</p>
-                      <p className="text-xs text-gray-600">Qty: {item.quantity}</p>
-                      <p className="font-bold text-sm">₹{item.product.price * item.quantity}</p>
+                      <p className="font-bold text-sm">₹{item.product.price}</p>
                     </div>
                   ))}
                 </div>

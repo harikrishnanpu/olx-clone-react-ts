@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { fetchProductByIdFromFirestore } from "../store/slices/productsSlice";
 import { addToCart, saveCartAsync } from "../store/slices/cartSlice";
 import toast from "react-hot-toast";
+import type { CartItem } from "../types/CartTypes";
 
 function ProductPage() {
   const { id } = useParams();
@@ -32,11 +33,17 @@ function ProductPage() {
     }
     if (currentProduct && user) {
       const existingItem = items.find(item => item.product.id === currentProduct.id);
-      if (!existingItem) {
-        dispatch(addToCart({ product: currentProduct, userId: user.uid }));
-        const updatedItems = [...items, { product: currentProduct }];
-        await dispatch(saveCartAsync({ userId: user.uid, items: updatedItems }));
-        toast.success("Added to cart!");
+  if (!existingItem) {
+    const newItem: CartItem = {
+      product: currentProduct,
+      productId: currentProduct.id,
+    };
+
+    dispatch(addToCart({ product: currentProduct, userId: user.uid })); // keep if your action expects this shape
+    const updatedItems: CartItem[] = [...items, newItem];
+
+    await dispatch(saveCartAsync({ userId: user.uid, items: updatedItems }));
+    toast.success("Added to cart!");
       }
     }
   };
